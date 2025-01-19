@@ -16,12 +16,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', router);
 
 // Serve static files from the dist folder
-const clientDistPath = path.join(__dirname,"./client/dist");
+const clientDistPath = path.join(__dirname,"client","dist");
 app.use(express.static(clientDistPath));
 
 // Catch-all route for SPA
 app.get("*", function(_, res){
-  res.sendFile(path.join(__dirname, "./client/dist/index.html"), (err) => {
+  res.sendFile(path.join(clientDistPath, "index.html"), (err) => {
     if (err) {
       res.status(500).send(err);
     }

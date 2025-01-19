@@ -19,7 +19,7 @@ export const uploadImage = (request, response) => {
     // console.log('Request file:', request.file);
     // console.log('Request body:', request.body);
     if(!request.file) {
-        console.log("kharbanda")
+        console.log("Image File not found");
         return response.status(404).json("File not found");
     }
     

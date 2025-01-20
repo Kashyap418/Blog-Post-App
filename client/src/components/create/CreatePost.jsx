@@ -67,7 +67,7 @@ const CreatePost = () => {
                 const data = new FormData();
                 data.append("name", file.name);
                 data.append("file", file);
-                console.log("gupta");
+                console.log("File uploaded from CreatePost :)");
                 console.log('File being uploaded:', file);
                 const response = await API.uploadFile(data);
                 console.log('Upload response:', response);

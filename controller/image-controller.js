@@ -1,7 +1,9 @@
 import grid from 'gridfs-stream';
 import mongoose from 'mongoose';
 
-const url = '';
+// const url = '';
+const url = process.env.API_URL || 'http://localhost:8000/';
+
 
 
 let gfs, gridfsBucket;
@@ -16,8 +18,8 @@ conn.once('open', () => {
 
 
 export const uploadImage = (request, response) => {
-    // console.log('Request file:', request.file);
-    // console.log('Request body:', request.body);
+    console.log('Request file:', request.file);
+    console.log('Request body:', request.body);
     if(!request.file) {
         console.log("Image File not found");
         return response.status(404).json("File not found");

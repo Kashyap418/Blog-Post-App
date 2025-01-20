@@ -6,7 +6,7 @@ import { getAccessToken, getType } from '../utils/common-utils';
 // const API_URL = '';
 
 // const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-const API_URL = 'http://localhost:8000';
+const API_URL = 'http://localhost:8000/';
 
 
 
@@ -102,7 +102,7 @@ for (const [key, value] of Object.entries(SERVICE_URLS)) {
         axiosInstance({
             method: value.method,
             url: value.url,
-            data: value.method === 'DELETE' ? undefined : JSON.stringify(body), //in delete api we do not send body why?
+            data: value.method === 'DELETE' ? undefined : body, //in delete api we do not send body why?
             // data: body,
             responseType: value.responseType,
             headers: {

@@ -1,9 +1,13 @@
 import grid from 'gridfs-stream';
 import mongoose from 'mongoose';
 
+<<<<<<< HEAD
 // const url = '';
 const url = process.env.API_URL || 'http://localhost:8000/';
 
+=======
+const url = process.env.API_URL || 'http://localhost:8000/';
+>>>>>>> 9314c1c734a88096a54af7b90669bc5cb1cbc190
 
 
 let gfs, gridfsBucket;

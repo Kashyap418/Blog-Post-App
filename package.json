@@ -4,13 +4,8 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-<<<<<<< HEAD
-    "server": "nodemon index.js",
-    "start": "node index.js",
-=======
     "server": "nodemon server.js",
     "start": "node server.js",
->>>>>>> 367d56311006d6445138e7a57392ee10cceb8dea
     "client-install": "cd client && npm install",
     "client-build": "cd client && npm run build",
     "render": "npm run client-install && npm run client-build"

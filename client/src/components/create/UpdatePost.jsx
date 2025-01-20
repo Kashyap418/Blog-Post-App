@@ -80,11 +80,11 @@ const Update = () => {
                 data.append("name", file.name);
                 data.append("file", file);
                 // console.log("gupta");
-                // console.log('File being uploaded:', file);
+                console.log('File being uploaded:', file);
                 const response = await API.uploadFile(data);
-                // console.log('Upload response:', response);
+                console.log('Upload response:', response);
                 setPost(prev => ({ ...prev, picture: response.data }));
-                // console.log('URL is ', response.data);
+                console.log('URL is ', response.data);
             }
         };
         getImage();

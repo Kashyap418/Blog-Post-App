@@ -6,7 +6,7 @@ import { getAccessToken, getType } from '../utils/common-utils';
 // const API_URL = '';
 
 // const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-const API_URL = 'http://localhost:8000/';
+const API_URL = 'http://localhost:8000';
 
 
 
@@ -107,8 +107,8 @@ for (const [key, value] of Object.entries(SERVICE_URLS)) {
             responseType: value.responseType,
             headers: {
                 authorization: getAccessToken(),
-                "Accept": "application/json, multipart/form-data", 
-                "Content-Type": "application/json"
+                "Accept": "application/json",
+                "Content-Type": value.method === 'POST' && body instanceof FormData ? "multipart/form-data" : "application/json"
             },
             TYPE: getType(value, body),
             onUploadProgress: function (progressEvent) {

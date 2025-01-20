@@ -2,8 +2,8 @@ import grid from 'gridfs-stream';
 import mongoose from 'mongoose';
 
 // const url = '';
-// const url = process.env.API_URL || 'http://localhost:8000/';
-const url ='http://localhost:8000/';
+// const url = process.env.API_URL || 'http://localhost:8000';
+const url ='http://localhost:8000';
 
 
 

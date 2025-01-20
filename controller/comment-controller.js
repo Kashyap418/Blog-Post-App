@@ -38,6 +38,7 @@ export const deleteComment = async (request, response) => {
     try {
         const comment = await Comment.findById(request.params.id);
         if (!comment) {
+            console.log('Comment not found');
             return response.status(404).json({ msg: 'Comment not found' });
         }
 

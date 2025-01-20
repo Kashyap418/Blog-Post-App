@@ -3,7 +3,11 @@ import { API_NOTIFICATION_MESSAGES, SERVICE_URLS } from '../constants/config';
 import { getAccessToken, getType } from '../utils/common-utils';
 
 
-const API_URL = '';
+// const API_URL = '';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
+
 
 const axiosInstance = axios.create({
     baseURL: API_URL,
@@ -19,7 +23,7 @@ axiosInstance.interceptors.request.use(
         if (config.TYPE.params) {
             config.params = config.TYPE.params
         } else if (config.TYPE.query) {
-            config.url = config.url + '/' + config.TYPE.query;
+            config.url = `${config.url}/${config.TYPE.query}`;  // Use template string for better readability
         }
         return config;
     },
@@ -30,14 +34,17 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
     function (response) {
-        //Stop global loader here
+        console.log('Response:', response);  // Log the raw response
+        //Stop Global Loader here
         return processResponse(response);
     },
     function (error) {
-        //Stop global loader here
+        console.log('Error:', error);  // Log the error for further inspection
+        //Stop Global Loader here
         return Promise.reject(processError(error));
     }
-)
+);
+
 
 const processResponse = (response) => {
     if (response?.status == 200) {
@@ -93,11 +100,13 @@ for (const [key, value] of Object.entries(SERVICE_URLS)) {
         axiosInstance({
             method: value.method,
             url: value.url,
-            data: value.method === 'DELETE' ? '' : body, //in delete api we do not send body why?
+            data: value.method === 'DELETE' ? undefined : JSON.stringify(body), //in delete api we do not send body why?
             // data: body,
             responseType: value.responseType,
             headers: {
                 authorization: getAccessToken(),
+                "Accept": "application/json, multipart/form-data", 
+                "Content-Type": "application/json"
             },
             TYPE: getType(value, body),
             onUploadProgress: function (progressEvent) {

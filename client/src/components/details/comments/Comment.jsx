@@ -35,13 +35,18 @@ const DeleteIcon = styled(Delete)`
 const Comment = ({ comment, setToggle }) => {
 
     const { account } = useContext(DataContext)
-    
+
     const removeComment = async () => {
-       let response=await API.deleteComment(comment._id);
-       if(response.isSuccess){
-           setToggle(prevState=>!prevState);
-       }
-       
+        try {
+            let response = await API.deleteComment(comment._id);
+            if (response.isSuccess) {
+                setToggle(prevState => !prevState);
+                console.log('Comment deleted successfully');
+            }
+        }
+        catch (error) {
+            console.log('Error in deleting comment:', error);
+        }    
     }
 
     return (
@@ -49,7 +54,7 @@ const Comment = ({ comment, setToggle }) => {
             <Container>
                 <Name>{comment.name}</Name>
                 <StyledDate>{new Date(comment.date).toDateString()}</StyledDate>
-                { comment.name === account.username && <DeleteIcon onClick={() => removeComment()} /> }
+                {comment.name === account.username && <DeleteIcon onClick={() => removeComment()} />}
             </Container>
             <Typography>{comment.comments}</Typography>
         </Component>

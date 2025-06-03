@@ -155,6 +155,7 @@ const Login = ({ isUserAuthenticated = () => {} }) => {
               onChange={(e) => valueChange(e)}
               name="password"
               label="Enter Password"
+              type="password"
             />
             {error && <Error>{error}</Error>}
             <LoginButton variant="contained" onClick={() => loginUser()}>
@@ -187,6 +188,7 @@ const Login = ({ isUserAuthenticated = () => {} }) => {
               onChange={(e) => inputChange(e)}
               name="password"
               label="Enter Password"
+              type="password"
             />
             {error && <Error>{error}</Error>}
             <SignupButton onClick={() => signupUser()}>Sign Up</SignupButton>

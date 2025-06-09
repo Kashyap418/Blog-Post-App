@@ -1,5 +1,4 @@
-import { Box, styled, Typography, Link } from '@mui/material';
-import { GitHub, Instagram, Email } from '@mui/icons-material';
+import { Box, styled, Typography } from '@mui/material';
 
 const Banner = styled(Box)`
     background-image: url(https://www.wallpapertip.com/wmimgs/23-236943_us-wallpaper-for-website.jpg);
@@ -18,33 +17,23 @@ const Wrapper = styled(Box)`
 
 const Text = styled(Typography)`
     color: #878787;
+    line-height: 1.8;
 `;
 
 const About = () => {
-
     return (
         <Box>
             <Banner/>
             <Wrapper>
-                <Typography variant="h3">Code for Interview</Typography>
-                <Text variant="h5">I'm a Software Engineer based in India. 
-                    I've built websites, desktop applications and corporate software.<br />
-                    If you are interested, you can view some of my favorite projects here
-                    <Box component="span" style={{ marginLeft: 5 }}>
-                        <Link href="https://github.com/kunaltyagi9" color="inherit" target="_blank"><GitHub /></Link>
-                    </Box>
-                </Text>
+                <Typography variant="h3">Kashyap Raina</Typography>
                 <Text variant="h5">
-                    Need something built or simply want to have chat? Reach out to me on
-                    <Box component="span" style={{ marginLeft: 5 }}>
-                        <Link href="https://www.instagram.com/codeforinterview/" color="inherit" target="_blank">
-                            <Instagram />
-                        </Link>
-                    </Box>  
-                        or send me an Email 
-                        <Link href="mailto:codeforinterview@gmail.com?Subject=This is a subject" target="_blank" color="inherit">
-                            <Email />
-                        </Link>.
+                    I'm a graduate from Punjab Engineering College, Chandigarh.
+                    During my internship at J&K Power Transmission Corporation Limited, I built a secure real-time chat application aimed at improving internal communication.
+                    I've completed several meaningful projects, including:
+                    <br />
+                    • A full-fledged blogging platform with secure authentication
+                    <br />
+                    • College minor project which solves ELD problem of Power system
                 </Text>
             </Wrapper>
         </Box>

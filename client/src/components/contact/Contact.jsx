@@ -1,5 +1,5 @@
 import { Box, styled, Typography, Link } from '@mui/material';
-import { GitHub, Instagram, Email } from '@mui/icons-material';
+import { GitHub, LinkedIn, Instagram, Email } from '@mui/icons-material';
 
 const Banner = styled(Box)`
     background-image: url(http://mrtaba.ir/image/bg2.jpg);
@@ -18,8 +18,8 @@ const Wrapper = styled(Box)`
 
 const Text = styled(Typography)`
     color: #878787;
+    line-height: 1.8;
 `;
-
 
 const Contact = () => {
     return (
@@ -28,14 +28,20 @@ const Contact = () => {
             <Wrapper>
                 <Typography variant="h3">Getting in touch is easy!</Typography>    
                 <Text variant="h5">
-                    Reach out to me on
-                    <Link href="https://www.instagram.com/codeforinterview/" color="inherit" target="_blank">
-                        <Instagram/>
-                    </Link>
+                    Connect with me on
+                    <Box component="span" style={{ marginLeft: 5 }}>
+                        <Link href="https://github.com/Kashyap418" color="inherit" target="_blank"><GitHub /></Link>
+                    </Box>
+                    <Box component="span" style={{ marginLeft: 5 }}>
+                        <Link href="https://www.linkedin.com/in/kashyapraina20/" color="inherit" target="_blank"><LinkedIn /></Link>
+                    </Box>
+                    <Box component="span" style={{ marginLeft: 5 }}>
+                        <Link href="https://www.instagram.com/kashyapraina418/" color="inherit" target="_blank"><Instagram /></Link>
+                    </Box>
                     or send me an Email 
-                    <Link href="mailto:codeforinterview@gmail.com?Subject=This is a subject" target="_blank" color="inherit">
+                    <Link href="mailto:kashyapraina418@gmail.com" target="_blank" color="inherit">
                         <Email />
-                    </Link>.
+                    </Link>
                 </Text>
             </Wrapper>
         </Box>

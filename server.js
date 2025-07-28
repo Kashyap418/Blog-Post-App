@@ -1,3 +1,4 @@
+// This is the main entry point for the server application
 import express from 'express';
 import Connection from './database/db.js';
 import dotenv from 'dotenv';
@@ -9,20 +10,22 @@ const __dirname = path.resolve();
 const app = express();
 dotenv.config();
 
-// CORS middleware
+// CORS middleware allows requests from other origins
 app.use(cors());
 
 // Use express built-in middleware to parse JSON and URL-encoded bodies
+// To handle Post API requests
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Use the main router for all routes
 app.use('/', router);
 
 // Serve static files from the dist folder
 const clientDistPath = path.join(__dirname, "client", "dist");
 app.use(express.static(clientDistPath));
 
-// Catch-all route for SPA
+// Catch-all route for SPA (Single Page Application)
 app.get("*", function(_, res){
   res.sendFile(path.join(clientDistPath, "index.html"), (err) => {
     if (err) {
@@ -33,6 +36,7 @@ app.get("*", function(_, res){
 
 const PORT = process.env.PORT || 8000;
 
+// Start the server and listen on the specified port
 app.listen(PORT, () => console.log(`Server is running on Port:${PORT}`));
 
 const USERNAME = process.env.DB_USERNAME;

@@ -1,5 +1,6 @@
 // This file handles the connection to the MongoDB database
 import mongoose from 'mongoose';
+import logger from '../utils/logger.js';
 
 // Function to connect to MongoDB using Mongoose
 const Connection = async (username, password) => {
@@ -9,10 +10,10 @@ const Connection = async (username, password) => {
     try {
         // Try to connect to the database
         await mongoose.connect(URL);
-        console.log('Database Connected Successfully');
+        logger.info('Database Connected Successfully');
     } catch (error) {
         // If connection fails, log the error
-        console.error('Error while Connecting Database', error.message || error);
+        logger.error('Error while Connecting Database', { error: error.message || error });
     }
 };
 

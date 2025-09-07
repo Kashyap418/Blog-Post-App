@@ -1,7 +1,7 @@
 // This component displays a grid of blog posts with responsive layout
 // It fetches posts from the API and filters them by category if specified
 import { useEffect, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Pagination } from '@mui/material';
 import { Link, useSearchParams } from 'react-router-dom';
 
 // Import API service for fetching posts
@@ -14,6 +14,9 @@ import Post from './Post';
 const Posts = () => {
     // State to store the fetched posts
     const [posts, setPosts] = useState([]);
+    const [page, setPage] = useState(1);
+    const [pages, setPages] = useState(1);
+    const [loading, setLoading] = useState(false);
     // Get search parameters to check for category filter
     const [searchParams] = useSearchParams();
     const category = searchParams.get('category');
@@ -22,14 +25,22 @@ const Posts = () => {
     useEffect(() => {
         // Function to fetch posts from API
         const fetchData = async () => {
-            // Call API with category filter if specified
-            const response = await API.getAllPosts({ category: category || '' });
+            setLoading(true);
+            const response = await API.getAllPosts({ category: category || '', page, limit: 9 });
             if (response.isSuccess) {
-                // Set the fetched posts in state
-                setPosts(response.data);
+                const { posts: fetched, pages: totalPages } = response.data;
+                setPages(totalPages || 1);
+                // Replace list for numbered pagination
+                setPosts(fetched);
             }
+            setLoading(false);
         };
         fetchData();
+    }, [category, page]);
+
+    useEffect(() => {
+        // reset when category changes
+        setPage(1);
     }, [category]);
 
     return (
@@ -90,6 +101,19 @@ const Posts = () => {
                     <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
                         No data is available for the selected category. Be the first to create a post!
                     </Typography>
+                </Box>
+            )}
+            {pages > 1 && (
+                <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
+                    <Pagination 
+                        count={pages}
+                        page={page}
+                        color="primary"
+                        onChange={(_, value) => setPage(value)}
+                        showFirstButton
+                        showLastButton
+                        disabled={loading}
+                    />
                 </Box>
             )}
         </>

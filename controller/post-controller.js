@@ -18,21 +18,30 @@ export const createPost= async (req,res)=>{
 
 // Controller to get all posts, optionally filtered by category
 export const getAllPosts= async (req,res)=>{
-    let category=req.query.category;
-    let posts;
+    const category = req.query.category;
+    const page = parseInt(req.query.page, 10) > 0 ? parseInt(req.query.page, 10) : 1;
+    const limit = parseInt(req.query.limit, 10) > 0 ? parseInt(req.query.limit, 10) : 10;
+
+    const filter = category ? { categories: category } : {};
+
     try{
-        if(category){
-            // If category is provided, filter posts by category
-            posts=await Post.find({categories:category});
-        }
-        else{
-            // Otherwise, get all posts
-            posts=await Post.find({});
-        }
-        return res.status(200).json(posts);
+        const total = await Post.countDocuments(filter);
+        const posts = await Post
+            .find(filter)
+            .sort({ createdDate: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit);
+
+        return res.status(200).json({
+            posts,
+            total,
+            page,
+            pages: Math.ceil(total / limit),
+            limit
+        });
     }catch(error){
         // Handle server errors
-        return res.status(500).json({msg:error.msg});
+        return res.status(500).json({ msg: error.message });
     }
 }
 
@@ -58,7 +67,7 @@ export const updatePost= async (req,res)=>{
         if(!post){
             // If post not found, return 404
             console.log('Post Not found')
-            return res.status(404).json({msg:error.msg});
+            return res.status(404).json({ msg: 'post not found' });
         }
 
         // Update the post with new data
@@ -66,7 +75,7 @@ export const updatePost= async (req,res)=>{
         return res.status(200).json({msg:'post updated successfully'})
     } catch(error){
         // Handle server errors
-        return res.status(500).json({error:error.msg})
+        return res.status(500).json({ error: error.message })
     }
 }
 

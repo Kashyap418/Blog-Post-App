@@ -18,21 +18,36 @@ export const createPost= async (req,res)=>{
 
 // Controller to get all posts, optionally filtered by category
 export const getAllPosts= async (req,res)=>{
-    let category=req.query.category;
-    let posts;
+    const category = req.query.category;
+    const page = Math.max(parseInt(req.query.page || '1', 10), 1);
+    const limit = Math.min(Math.max(parseInt(req.query.limit || '10', 10), 1), 50);
+    const skip = (page - 1) * limit;
+
     try{
-        if(category){
-            // If category is provided, filter posts by category
-            posts=await Post.find({categories:category});
-        }
-        else{
-            // Otherwise, get all posts
-            posts=await Post.find({});
-        }
-        return res.status(200).json(posts);
+        const filter = category ? { categories: category } : {};
+
+        const [items, total] = await Promise.all([
+            Post.find(filter)
+                .sort({ createdDate: -1 })
+                .skip(skip)
+                .limit(limit)
+                .lean(),
+            Post.countDocuments(filter)
+        ]);
+
+        const totalPages = Math.ceil(total / limit) || 1;
+
+        return res.status(200).json({
+            items,
+            page,
+            limit,
+            total,
+            totalPages,
+            hasNextPage: page < totalPages,
+            hasPrevPage: page > 1
+        });
     }catch(error){
-        // Handle server errors
-        return res.status(500).json({msg:error.msg});
+        return res.status(500).json({msg:error?.message || 'Failed to fetch posts'});
     }
 }
 

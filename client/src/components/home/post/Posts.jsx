@@ -1,7 +1,7 @@
 // This component displays a grid of blog posts with responsive layout
 // It fetches posts from the API and filters them by category if specified
 import { useEffect, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Button, Stack } from '@mui/material';
 import { Link, useSearchParams } from 'react-router-dom';
 
 // Import API service for fetching posts
@@ -14,6 +14,8 @@ import Post from './Post';
 const Posts = () => {
     // State to store the fetched posts
     const [posts, setPosts] = useState([]);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     // Get search parameters to check for category filter
     const [searchParams] = useSearchParams();
     const category = searchParams.get('category');
@@ -22,15 +24,18 @@ const Posts = () => {
     useEffect(() => {
         // Function to fetch posts from API
         const fetchData = async () => {
-            // Call API with category filter if specified
-            const response = await API.getAllPosts({ category: category || '' });
+            const params = { category: category || '', page, limit: 8 };
+            const response = await API.getAllPosts(params);
             if (response.isSuccess) {
-                // Set the fetched posts in state
-                setPosts(response.data);
+                setPosts(response.data.items || []);
+                setTotalPages(response.data.totalPages || 1);
             }
         };
         fetchData();
-    }, [category]);
+    }, [category, page]);
+
+    const handlePrev = () => setPage((p) => Math.max(1, p - 1));
+    const handleNext = () => setPage((p) => Math.min(totalPages, p + 1));
 
     return (
         <>
@@ -92,6 +97,13 @@ const Posts = () => {
                     </Typography>
                 </Box>
             )}
+
+            {/* Pagination Controls */}
+            <Stack direction="row" spacing={2} justifyContent="center" sx={{ my: 3 }}>
+                <Button variant="outlined" disabled={page <= 1} onClick={handlePrev}>Previous</Button>
+                <Typography variant="body2" sx={{ alignSelf: 'center' }}>Page {page} of {totalPages}</Typography>
+                <Button variant="outlined" disabled={page >= totalPages} onClick={handleNext}>Next</Button>
+            </Stack>
         </>
     );
 };

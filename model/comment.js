@@ -21,6 +21,10 @@ const CommentSchema = mongoose.Schema({
     }
 });
 
+// Indexes for efficient lookups and ordering
+CommentSchema.index({ postId: 1, date: -1 }); // comments by post, newest first
+CommentSchema.index({ date: -1 });
+
 // Create the Comment model from the schema
 const comment = mongoose.model('comment', CommentSchema);
 

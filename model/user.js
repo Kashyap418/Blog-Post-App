@@ -18,6 +18,9 @@ const userSchema = mongoose.Schema({
     }
 });
 
+// Ensure fast lookups by username
+userSchema.index({ username: 1 }, { unique: true });
+
 // Create the User model from the schema
 const user = mongoose.model('user', userSchema);
 

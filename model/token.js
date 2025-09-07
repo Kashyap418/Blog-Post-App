@@ -9,6 +9,9 @@ const tokenSchema=mongoose.Schema({
     }
 })
 
+// Speed up refresh token lookups and prevent duplicates if needed
+tokenSchema.index({ token: 1 });
+
 // Create the Token model from the schema
 const token =mongoose.model('token',tokenSchema);
 

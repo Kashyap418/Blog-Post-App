@@ -29,6 +29,12 @@ const PostSchema = mongoose.Schema({
     }
 });
 
+// Indexes to optimize common queries and sorts
+PostSchema.index({ categories: 1, createdDate: -1 }); // feed by category/date
+PostSchema.index({ username: 1, createdDate: -1 });   // user profile feed
+PostSchema.index({ createdDate: -1 });                 // recent posts
+PostSchema.index({ title: 'text', description: 'text' }); // text search
+
 // Create the Post model from the schema
 const post = mongoose.model('post', PostSchema);
 

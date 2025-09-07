@@ -5,6 +5,8 @@ import axios from 'axios';
 import { API_NOTIFICATION_MESSAGES, SERVICE_URLS } from '../constants/config';
 // Import utility functions for token and type handling
 import { getAccessToken, getType } from '../utils/common-utils';
+// Import refresh token utility
+import { refreshAccessToken } from '../utils/tokenUtils';
 
 // const API_URL = '';
 
@@ -61,9 +63,32 @@ axiosInstance.interceptors.response.use(
             }));
         }
     },
-    function (error) {
+    async function (error) {
         console.log('Error:', error);  // Log the error for debugging
         //Stop Global Loader here (if you have a loader)
+        
+        const originalRequest = error.config;
+        
+        // Check if the error is due to expired access token (401) and we haven't already tried to refresh
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+            
+            try {
+                // Try to refresh the access token
+                const newAccessToken = await refreshAccessToken();
+                
+                // Update the authorization header with the new token
+                originalRequest.headers['authorization'] = `Bearer ${newAccessToken}`;
+                
+                // Retry the original request with the new token
+                return axiosInstance(originalRequest);
+            } catch (refreshError) {
+                console.error('Token refresh failed:', refreshError);
+                // If refresh fails, the user will be redirected to login by refreshAccessToken
+                return Promise.reject(processError(error));
+            }
+        }
+        
         return Promise.reject(processError(error));
     }
 );

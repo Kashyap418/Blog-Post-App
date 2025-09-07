@@ -7,7 +7,7 @@ import express from "express";
 // app.use(cors());
 
 // Import controllers for user, image, post, and comment operations
-import { signUserUp, loginUser } from "../controller/user-controller.js";
+import { signUserUp, loginUser, refreshToken } from "../controller/user-controller.js";
 import { getImage, uploadImage } from "../controller/image-controller.js";
 
 // Import upload utility for handling file uploads
@@ -24,6 +24,8 @@ const router = express.Router();
 router.post('/signup', signUserUp);
 // User login route
 router.post('/login', loginUser);
+// Refresh token route
+router.post('/token', refreshToken);
 // File upload route
 router.post('/file/upload', upload.single('file'), uploadImage);
 // Get image by filename

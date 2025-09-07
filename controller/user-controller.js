@@ -116,3 +116,65 @@ export const loginUser = async (req, res) => {
         });
     }
 }
+
+// Controller to handle refresh token requests
+export const refreshToken = async (req, res) => {
+    try {
+        // Get the refresh token from the request body
+        const { refreshToken } = req.body;
+        
+        if (!refreshToken) {
+            return res.status(400).json({ 
+                msg: 'Refresh token is required',
+                field: 'refreshToken'
+            });
+        }
+
+        // Verify the refresh token
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET_KEY);
+        
+        // Check if the refresh token exists in the database
+        const tokenExists = await Token.findOne({ token: refreshToken });
+        if (!tokenExists) {
+            return res.status(401).json({ 
+                msg: 'Invalid refresh token',
+                field: 'refreshToken'
+            });
+        }
+
+        // Get the user information
+        const user = await User.findOne({ username: decoded.username });
+        if (!user) {
+            return res.status(401).json({ 
+                msg: 'User not found',
+                field: 'user'
+            });
+        }
+
+        // Generate new access token
+        const newAccessToken = jwt.sign(user.toJSON(), process.env.ACCESS_SECRET_KEY, { expiresIn: '15m' });
+
+        // Return the new access token
+        return res.status(200).json({ 
+            accessToken: newAccessToken,
+            name: user.name,
+            username: user.username
+        });
+
+    } catch (error) {
+        console.error('Refresh token error:', error);
+        
+        // Handle JWT errors
+        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+            return res.status(401).json({ 
+                msg: 'Invalid or expired refresh token',
+                field: 'refreshToken'
+            });
+        }
+        
+        return res.status(500).json({ 
+            msg: 'Server error occurred during token refresh. Please try again later.',
+            field: 'server'
+        });
+    }
+}

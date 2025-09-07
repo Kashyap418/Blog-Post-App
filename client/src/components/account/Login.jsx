@@ -28,6 +28,8 @@ import {
 import { API } from "../../service/api";
 // Import context for managing user account state
 import { DataContext } from "../../context/DataProvider";
+// Import token utilities
+import { setAccessToken, setRefreshToken } from "../../utils/common-utils";
 
 // Import navigation hook for redirecting after successful login
 import { useNavigate } from "react-router-dom";
@@ -194,15 +196,9 @@ const Login = ({ isUserAuthenticated = () => {} }) => {
         setError("");
 
         // Store access token in session storage for API authentication
-        sessionStorage.setItem(
-          "accessToken",
-          `Bearer ${response.data.accessToken}`
-        );
+        setAccessToken(response.data.accessToken);
         // Store refresh token in session storage for token renewal
-        sessionStorage.setItem(
-          "refreshToken",
-          `Bearer ${response.data.refreshToken}`
-        );
+        setRefreshToken(response.data.refreshToken);
 
         // Update user account information in context
         setAccount({

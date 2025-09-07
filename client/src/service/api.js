@@ -48,7 +48,18 @@ axiosInstance.interceptors.response.use(
     function (response) {
         console.log('Response:', response);  // Log the raw response for debugging
         //Stop Global Loader here (if you have a loader)
-        return processResponse(response);
+        
+        // Check if response status is 200-299 (success range)
+        if (response.status >= 200 && response.status < 300) {
+            return processResponse(response);
+        } else {
+            // Treat 400+ status codes as errors
+            return Promise.reject(processError({
+                response: response,
+                request: null,
+                message: 'Request failed with status ' + response.status
+            }));
+        }
     },
     function (error) {
         console.log('Error:', error);  // Log the error for debugging
@@ -82,6 +93,17 @@ const processError = (error) => {
         // Request was made successfully but server responded with error status (4xx, 5xx)
         // This means the server received the request but couldn't process it
         console.log('ERROR IN RESPONSE:', error.toJSON());
+        
+        // Check if the server provided a specific error message
+        if (error.response.data && error.response.data.msg) {
+            return {
+                isError: true,
+                msg: error.response.data.msg,
+                code: error.response.status
+            }
+        }
+        
+        // Fallback to generic message if no specific message provided
         return {
             isError: true,
             msg: API_NOTIFICATION_MESSAGES.responseFailure,
@@ -124,10 +146,10 @@ for (const [key, value] of Object.entries(SERVICE_URLS)) { //
             data: value.method === 'DELETE' ? undefined : body, // Do not send body for DELETE requests (RESTful convention)
             responseType: value.responseType, // Response type if specified (e.g., 'blob' for file downloads)
             headers: {
-                authorization: getAccessToken(), // Add access token to headers for authentication
+                authorization: getAccessToken(), // Add access token to headers for authentication of user for api calls on backend
                 "Accept": "application/json", // Tell server we expect JSON response
                 "Content-Type": value.method === 'POST' && body instanceof FormData ? "multipart/form-data" : "application/json"
-                // Use multipart/form-data for file uploads, JSON for regular data
+                // Use multipart/form-data for file uploads, JSON for regular data  
             },
             TYPE: getType(value, body), // Add TYPE info for request interceptor to process params/query
             onUploadProgress: function (progressEvent) {

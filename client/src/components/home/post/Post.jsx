@@ -1,76 +1,195 @@
 // This component displays an individual blog post card
-// It shows the post image, title, description, author, and category in a compact format
-import { styled, Box, Typography } from '@mui/material';
-
-// Styled component for the post card container
-// Creates a bordered card with rounded corners and proper spacing
-const Container = styled(Box)`
-    border: 1px solid #d3cede;
-    border-radius: 10px;
-    margin: 10px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    height: 350px;
-    & > img, & > p {
-        padding: 0 5px 5px 5px;
-    }
-`;
-
-// Styled component for the post image
-// Makes the image responsive and maintains aspect ratio with rounded top corners
-const Image = styled('img')({
-    width: '100%',
-    objectFit: 'cover',
-    borderRadius: '10px 10px 0 0',
-    height: 150
-});
-
-// Styled component for secondary text (category, author)
-// Uses muted gray color and smaller font size
-const Text = styled(Typography)`
-    color: #878787
-    font-size: 12px;
-`;
-
-// Styled component for the post title
-// Uses larger, bold font for the main heading
-const Heading = styled(Typography)`
-    font-size: 18px;
-    font-weight: 600
-`;
-
-// Styled component for the post description
-// Uses medium font size with word break for long text
-const Details = styled(Typography)`
-    font-size: 14px;
-    word-break: break-word;
-`;
+// It shows the post image, title, description, author, and category in a modern card format
+import { 
+    Card, 
+    CardMedia, 
+    CardContent, 
+    CardActions, 
+    Typography, 
+    Box, 
+    Chip, 
+    Avatar,
+    IconButton,
+    useTheme
+} from '@mui/material';
+import { 
+    Person as PersonIcon, 
+    CalendarToday as CalendarIcon,
+    Visibility as ViewIcon,
+    BookmarkBorder as BookmarkIcon
+} from '@mui/icons-material';
 
 // Main Post component for displaying individual post cards
 const Post = ({ post }) => {
+    const theme = useTheme();
+    
     // Default image URL for posts without images
     const url = post.picture ? post.picture : 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80';
     
     // Function to truncate text with ellipsis if it exceeds the limit
     const addEllipsis = (str, limit) => {
         return str.length > limit ? str.substring(0, limit) + '...' : str;
-    } 
+    };
+
+    // Format date
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    };
 
     return (
-        <Container>
-            {/* Display the post image (or default if none exists) */}
-            <Image src={url} alt="post" />
-            {/* Display the post category */}
-            <Text>{post.categories}</Text>
-            {/* Display the post title (truncated if too long) */}
-            <Heading>{addEllipsis(post.title, 20)}</Heading>
-            {/* Display the post author */}
-            <Text>Author: {post.username}</Text>
-            {/* Display the post description (truncated if too long) */}
-            <Details>{addEllipsis(post.description, 100)}</Details>
-        </Container>
-    )
-}
+        <Card
+            sx={{
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                    transform: 'translateY(-8px)',
+                    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+                },
+                borderRadius: 3,
+                overflow: 'hidden',
+                border: '1px solid',
+                borderColor: 'grey.200',
+            }}
+        >
+            {/* Post Image */}
+            <CardMedia
+                component="img"
+                height="200"
+                image={url}
+                alt={post.title}
+                sx={{
+                    objectFit: 'cover',
+                    transition: 'transform 0.3s ease-in-out',
+                    '&:hover': {
+                        transform: 'scale(1.05)',
+                    },
+                }}
+            />
+
+            {/* Post Content */}
+            <CardContent sx={{ flexGrow: 1, p: 3 }}>
+                {/* Category Chip */}
+                {post.categories && (
+                    <Chip
+                        label={post.categories}
+                        size="small"
+                        sx={{
+                            mb: 2,
+                            backgroundColor: 'primary.50',
+                            color: 'primary.main',
+                            fontWeight: 500,
+                            fontSize: '0.75rem',
+                        }}
+                    />
+                )}
+
+                {/* Post Title */}
+                <Typography
+                    variant="h6"
+                    component="h2"
+                    sx={{
+                        fontWeight: 600,
+                        mb: 1.5,
+                        lineHeight: 1.3,
+                        color: 'text.primary',
+                        fontSize: '1.1rem',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                    }}
+                >
+                    {addEllipsis(post.title, 60)}
+                </Typography>
+
+                {/* Post Description */}
+                <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{
+                        mb: 2,
+                        lineHeight: 1.6,
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                    }}
+                >
+                    {addEllipsis(post.description, 120)}
+                </Typography>
+
+                {/* Author and Date Info */}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        mb: 1,
+                    }}
+                >
+                    <Avatar
+                        sx={{
+                            width: 24,
+                            height: 24,
+                            backgroundColor: 'primary.main',
+                            fontSize: '0.75rem',
+                        }}
+                    >
+                        {post.username?.charAt(0).toUpperCase()}
+                    </Avatar>
+                    <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ fontWeight: 500 }}
+                    >
+                        {post.username}
+                    </Typography>
+                </Box>
+
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.5,
+                    }}
+                >
+                    <CalendarIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
+                    <Typography variant="caption" color="text.secondary">
+                        {formatDate(post.createdDate)}
+                    </Typography>
+                </Box>
+            </CardContent>
+
+            {/* Card Actions */}
+            <CardActions
+                sx={{
+                    p: 2,
+                    pt: 0,
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                }}
+            >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <IconButton size="small" sx={{ color: 'text.secondary' }}>
+                        <ViewIcon fontSize="small" />
+                    </IconButton>
+                    <Typography variant="caption" color="text.secondary">
+                        Read more
+                    </Typography>
+                </Box>
+                
+                <IconButton size="small" sx={{ color: 'text.secondary' }}>
+                    <BookmarkIcon fontSize="small" />
+                </IconButton>
+            </CardActions>
+        </Card>
+    );
+};
 
 export default Post;

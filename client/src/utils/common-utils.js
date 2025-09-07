@@ -1,6 +1,6 @@
 export const getAccessToken = () => {
     return sessionStorage.getItem('accessToken');
-}
+} //get access token from session storage for authentication of user for api calls on frontend
 
 // export const getRefreshToken = () => {
 //     return sessionStorage.getItem('refreshToken');

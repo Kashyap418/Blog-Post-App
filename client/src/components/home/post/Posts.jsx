@@ -1,7 +1,7 @@
 // This component displays a grid of blog posts with responsive layout
 // It fetches posts from the API and filters them by category if specified
 import { useEffect, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { Link, useSearchParams } from 'react-router-dom';
 
 // Import API service for fetching posts
@@ -39,33 +39,30 @@ const Posts = () => {
                 // Grid container for posts with responsive layout
                 <Box
                     sx={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: 2,
-                        justifyContent: 'center',
+                        display: 'grid',
+                        gridTemplateColumns: {
+                            xs: '1fr',
+                            sm: 'repeat(2, 1fr)',
+                            lg: 'repeat(3, 1fr)',
+                            xl: 'repeat(4, 1fr)',
+                        },
+                        gap: 3,
+                        p: 2,
                     }}
                 >
                     {/* Map through posts and display each one */}
                     {posts.map((post) => (
-                        // Individual post container with responsive sizing
+                        // Individual post container
                         <Box
                             key={post._id}
                             sx={{
-                                flex: {
-                                    xs: '0 0 100%', // Full width on extra small screens
-                                    sm: '0 0 calc(100% / 3)', // 1/3 width on small screens
-                                    lg: '0 0 calc(100% / 4)', // 1/4 width on large screens
-                                },
-                                maxWidth: {
-                                    xs: '100%',
-                                    sm: 'calc(100% / 3)',
-                                    lg: 'calc(100% / 4)',
-                                },
+                                display: 'flex',
+                                flexDirection: 'column',
                             }}
                         >
                             {/* Link to post details page */}
                             <Link
-                                style={{ textDecoration: 'none', color: 'inherit' }}
+                                style={{ textDecoration: 'none', color: 'inherit', height: '100%' }}
                                 to={`details/${post._id}`} //mongodbID
                             >
                                 {/* Display individual post component */}
@@ -78,13 +75,21 @@ const Posts = () => {
                 // Display message when no posts are available
                 <Box
                     sx={{
-                        color: '#878787',
-                        margin: '30px 80px',
-                        fontSize: 18,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        py: 8,
+                        px: 4,
                         textAlign: 'center',
                     }}
                 >
-                    No data is available for the selected category.
+                    <Typography variant="h5" color="text.secondary" sx={{ mb: 2 }}>
+                        No posts found
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+                        No data is available for the selected category. Be the first to create a post!
+                    </Typography>
                 </Box>
             )}
         </>

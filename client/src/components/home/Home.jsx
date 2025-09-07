@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Container, useTheme, useMediaQuery } from '@mui/material';
 
 // Import the main components for the home page
 import Banner from '../banner/Banner';
@@ -7,21 +7,47 @@ import Posts from './post/Posts';
 
 // Main Home component that provides the overall page layout
 const Home = () => {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
     return (
         <>
             {/* Display the main banner at the top */}
             <Banner />
+            
             {/* Main content area with responsive layout */}
-            <Box display="flex" flexWrap="wrap">
-                {/* Categories sidebar - takes 1/6 width on small screens and up */}
-                <Box flex={{ xs: '100%', sm: '16.67%' }} maxWidth={{ xs: '100%', sm: '16.67%' }}>
-                    <Categories />
+            <Container maxWidth="xl" sx={{ py: 4 }}>
+                <Box 
+                    sx={{ 
+                        display: 'flex', 
+                        gap: 3,
+                        flexDirection: { xs: 'column', md: 'row' },
+                        alignItems: 'flex-start'
+                    }}
+                >
+                    {/* Categories sidebar */}
+                    <Box 
+                        sx={{ 
+                            width: { xs: '100%', md: '300px' },
+                            flexShrink: 0,
+                            position: { md: 'sticky' },
+                            top: { md: 80 },
+                        }}
+                    >
+                        <Categories />
+                    </Box>
+                    
+                    {/* Posts display area */}
+                    <Box 
+                        sx={{ 
+                            flex: 1,
+                            minWidth: 0, // Prevents flex item from overflowing
+                        }}
+                    >
+                        <Posts />
+                    </Box>
                 </Box>
-                {/* Posts display area - takes 5/6 width on small screens and up */}
-                <Box flex={{ xs: '100%', sm: '83.33%' }} maxWidth={{ xs: '100%', sm: '83.33%' }}>
-                    <Posts />
-                </Box>
-            </Box>
+            </Container>
         </>
     );
 };
